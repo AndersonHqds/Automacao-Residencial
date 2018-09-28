@@ -20,11 +20,13 @@ public class ShowDevices extends ListActivity{
 
     static String MAC_ADDRESS = null;
 
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ArrayAdapter<String> ArrayBluetooth = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1);
+
+        ArrayAdapter<String> ArrayBluetooth = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -37,6 +39,7 @@ public class ShowDevices extends ListActivity{
                 ArrayBluetooth.add(btName + "\n" + mac);
             }
         }
+
         setListAdapter(ArrayBluetooth);
 
     }

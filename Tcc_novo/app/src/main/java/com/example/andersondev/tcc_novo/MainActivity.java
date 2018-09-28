@@ -3,6 +3,7 @@ package com.example.andersondev.tcc_novo;
 import android.content.Intent;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +21,8 @@ import android.text.format.DateUtils;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.andersondev.tcc_novo.database.DataOpenHelper;
@@ -27,24 +30,31 @@ import com.example.andersondev.tcc_novo.database.DataOpenHelper;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
-    private CoordinatorLayout layoutCoord;
+    private RelativeLayout layoutCoord;
 
     /* TTS */
+    Speech speech;
     private TextToSpeech myTTS;
-    private SpeechRecognizer mySR;
+
 
     /* DATABASE */
     private SQLiteDatabase conn;
     private DataOpenHelper dataOH;
 
     /* Bluetooth */
+    Bluetooth bluetooth;
+    UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
 
+    /* Controle */
+    ImageButton btnControl;
 
-
+    /* Temperature */
+    ImageButton btnTemperature;
     /**
      * When it's being created
      * @param savedInstanceState
@@ -53,10 +63,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        /* BLUETOOTH */
+        bluetooth = new Bluetooth(getApplicationContext(),uuid,this);
+        bluetooth.create();
+        speech =  new Speech(this, getApplicationContext(),bluetooth);
 
         setContentView(R.layout.controle);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
+        btnControl  = (ImageButton) findViewById(R.id.btnControl);
+        btnTemperature = (ImageButton) findViewById(R.id.btnTemperature);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -69,20 +84,42 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS,1);
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE,new Locale("pt","BR"));
 
-                mySR.startListening(intent);
+                speech.mySR.startListening(intent);
             }
         });
 
         /* TTS FUNCTIONS*/
-        initializeTextToSpeech();
-        initializeSpeechRecognizer();
+        speech.initializeTextToSpeech();
+        speech.initializeSpeechRecognizer();
 
-        layoutCoord = (CoordinatorLayout)findViewById(R.id.layout_main);
 
-        /* CREATE CONNECTION DATABASE
+
+
+        /* CREATE CONNECTION DATABASE */
         createConnection();
-        new Bluetooth();
-        */
+
+
+        btnControl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(MainActivity.this, Control.class);
+                startActivity(it);
+            }
+        });
+
+        btnTemperature.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(MainActivity.this, Temperature.class);
+                startActivity(it);
+            }
+        });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        bluetooth.result(requestCode,resultCode,data);
     }
 
     private void createConnection(){
@@ -90,11 +127,10 @@ public class MainActivity extends AppCompatActivity {
             dataOH = new DataOpenHelper(this);
 
             conn = dataOH.getWritableDatabase();
-            Snackbar.make(layoutCoord, "Conexão criada com sucesso!",Snackbar.LENGTH_SHORT)
-                    .setAction("OK",null).show();
+            Snackbar.make(findViewById(android.R.id.content), "Conexão criada com sucesso!",Snackbar.LENGTH_SHORT).setAction("OK",null).show();
         }
         catch (SQLException e){
-            AlertDialog.Builder dlg = new AlertDialog.Builder(this);
+            AlertDialog.Builder dlg = new AlertDialog.Builder(getApplicationContext());
             dlg.setTitle("Erro");
             dlg.setMessage(e.getMessage());
             dlg.setNeutralButton("OK", null);
@@ -102,118 +138,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void initializeSpeechRecognizer() {
-        if(SpeechRecognizer.isRecognitionAvailable(this)){
-            mySR = SpeechRecognizer.createSpeechRecognizer(this);
-            mySR.setRecognitionListener(new RecognitionListener() {
-                @Override
-                public void onReadyForSpeech(Bundle params) {
-
-                }
-
-                @Override
-                public void onBeginningOfSpeech() {
-
-                }
-
-                @Override
-                public void onRmsChanged(float rmsdB) {
-
-                }
-
-                @Override
-                public void onBufferReceived(byte[] buffer) {
-
-                }
-
-                @Override
-                public void onEndOfSpeech() {
-
-                }
-
-                @Override
-                public void onError(int error) {
-
-                }
-
-                @Override
-                public void onResults(Bundle bundle) {
-                    List<String> results = bundle.getStringArrayList(
-                            SpeechRecognizer.RESULTS_RECOGNITION
-                    );
-
-                    processResult(results.get(0));
-                }
-
-                @Override
-                public void onPartialResults(Bundle partialResults) {
-
-                }
-
-                @Override
-                public void onEvent(int eventType, Bundle params) {
-
-                }
-            });
-        }
-    }
-
-    private void processResult(String cmd) {
-        cmd = cmd.toLowerCase();
-
-        if(cmd.contains("qual")){
-            if(cmd.contains("o seu nome")){
-                speak("Meu nome é Skyler.");
-            }
-            else if(cmd.contains("a hora")){
-                Date now = new Date();
-                String time = DateUtils.formatDateTime(this, now.getTime(), DateUtils.FORMAT_SHOW_TIME);
-                speak("A hora agora é" + time);
-            }
-            else if(cmd.contains("o melhor sistema")){
-                speak("Óbvio que é linux");
-            }
-            else{
-                speak("Desculpe mas não entendi");
-            }
-        }
-        else{
-            speak("Não entendi");
-            if(cmd.indexOf("abrir") != -1){
-                if(cmd.contains("navegador")){
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://devanderson.000webhostapp.com"));
-                    startActivity(intent);
-                }
-            }
-        }
-    }
-
-    private void initializeTextToSpeech() {
-        myTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if(myTTS.getEngines().size() == 0){
-                    Toast.makeText(MainActivity.this, "There is no TTS engine on your device", Toast.LENGTH_LONG).show();
-                    finish();
-                }
-                else{
-                    Locale locale = new Locale("pt","BR");
-                    myTTS.setLanguage(locale);
-                    speak("Olá anderson");
-                    speak("Eu estou pronta para falar");
-                }
-            }
-        });
-    }
-
-    private void speak(String message) {
-        if(Build.VERSION.SDK_INT >= 21){
-            myTTS.speak(message, TextToSpeech.QUEUE_ADD, null, null);
-        }
-        else{
-            myTTS.speak(message, TextToSpeech.QUEUE_ADD, null);
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -239,6 +163,6 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onPause(){
         super.onPause();
-        myTTS.shutdown();
+        speech.myTTS.shutdown();
     }
 }

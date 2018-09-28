@@ -11,9 +11,9 @@
     <ImageButton
         android:layout_width="150dp"
         app:srcCompat="@drawable/idea"
-        android:id="@+id/imageButton4"
+        android:id="@+id/btnLed"
         android:layout_height="150dp"
-        android:layout_alignTop="@+id/imageButton5"
+        android:layout_alignTop="@+id/btnFan"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
@@ -21,9 +21,20 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         app:srcCompat="@drawable/fan"
-        android:id="@+id/imageButton5"
+        android:id="@+id/btnFan"
         android:layout_marginTop="165dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/connect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="63dp"
+        android:text="Conectar" />
+
+
 </RelativeLayout>

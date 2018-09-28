@@ -12,10 +12,11 @@
     <ImageButton
         android:layout_width="150dp"
         android:layout_height="150dp"
-        app:srcCompat="@drawable/temperature"
-        android:id="@+id/imageButton6"
+        android:src="@drawable/temperature"
+        android:id="@+id/btnTemperature"
         android:layout_marginTop="58dp"
-        android:layout_below="@+id/imageButton"
+        android:layout_below="@+id/btnControl"
+        android:clickable="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -34,7 +35,7 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         app:srcCompat="@drawable/house"
-        android:id="@+id/imageButton"
+        android:id="@+id/btnControl"
         android:layout_alignTop="@+id/imageButton3"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -44,7 +45,7 @@
         android:layout_height="150dp"
         app:srcCompat="@drawable/graficos"
         android:id="@+id/imageButton2"
-        android:layout_alignTop="@+id/imageButton6"
+        android:layout_alignTop="@+id/btnTemperature"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
