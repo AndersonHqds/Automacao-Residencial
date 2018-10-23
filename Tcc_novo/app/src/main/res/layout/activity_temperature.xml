@@ -16,10 +16,11 @@
         android:scaleType="centerCrop"
         app:lottie_autoPlay="false"
         app:lottie_fileName="sun_moon.json"
-        app:lottie_loop="false" />
+        app:lottie_loop="false"
+        android:layout_alignParentLeft="true" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/temperatura"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

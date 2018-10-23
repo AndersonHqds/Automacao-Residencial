@@ -3,7 +3,6 @@ package com.example.andersondev.tcc_novo;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -22,7 +21,7 @@ public class Control extends AppCompatActivity{
     ImageButton btnFan, btnLed;
 
     UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
-
+    public static final int MESSAGE_READ = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,19 +29,10 @@ public class Control extends AppCompatActivity{
 
         setContentView(R.layout.funcionalidade);
 
-        btnConection = (Button)findViewById(R.id.connect);
         btnLed = (ImageButton)findViewById(R.id.btnLed);
         btnFan = (ImageButton)findViewById(R.id.btnFan);
-        bluetooth = new Bluetooth(getApplicationContext(),uuid,Control.this);
-
-
-
-        btnConection.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bluetooth.create();
-            }
-        });
+        bluetooth = new Bluetooth(getApplicationContext(),uuid,Control.this,0 );
+        bluetooth.create();
 
 
         btnLed.setOnClickListener(new View.OnClickListener() {
@@ -69,6 +59,12 @@ public class Control extends AppCompatActivity{
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        bluetooth.closeConn();
+        Intent it = new Intent(Control.this, MainActivity.class);
+        startActivity(it);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

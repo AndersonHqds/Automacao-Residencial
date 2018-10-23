@@ -23,7 +23,7 @@ public class Speech {
 
     private Activity activity;
     private Context context;
-
+    private boolean isAvailableRecognizer;
     /* Bluetooth */
     Bluetooth bluetooth;
     public Speech(Activity activity, Context context, Bluetooth bt){
@@ -34,7 +34,8 @@ public class Speech {
 
     public void initializeSpeechRecognizer() {
 
-        if(SpeechRecognizer.isRecognitionAvailable(activity)){
+        if(SpeechRecognizer.isRecognitionAvailable(context)){
+            isAvailableRecognizer = true;
             mySR = SpeechRecognizer.createSpeechRecognizer(activity);
             mySR.setRecognitionListener(new RecognitionListener() {
                 @Override
@@ -87,8 +88,15 @@ public class Speech {
                 }
             });
         }
+        else{
+            Toast.makeText(activity, "Desculpe, mas seu dispositivo não suporta reconhecimento de voz", Toast.LENGTH_SHORT).show();
+            isAvailableRecognizer = false;
+        }
     }
 
+    public boolean isAvailableRecognizer(){
+        return isAvailableRecognizer;
+    }
 
     public void initializeTextToSpeech() {
         myTTS = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
@@ -143,9 +151,24 @@ public class Speech {
                     activity.startActivity(intent);
                 }
             }
-            else if(cmd.indexOf("ligar luz") != -1){
+            else if(cmd.indexOf("desligar ventilador") != -1) {
+                speak("desligando ventilador");
+                bluetooth.connectedThread.write("fan");
+            }
+            else if(cmd.indexOf("ligar ventilador") != -1){
+                speak("ligando ventilador");
+                bluetooth.connectedThread.write("fan");
+            }
+            else if(cmd.indexOf("desligar luz") != -1){
+                speak("desligar luz");
                 bluetooth.connectedThread.write("led1");
             }
+            else if(cmd.indexOf("ligar luz") != -1) {
+                speak("ligando luz");
+                bluetooth.connectedThread.write("led1");
+            }
+
+
         }
     }
 }

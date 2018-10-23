@@ -1,23 +1,13 @@
 package com.example.andersondev.tcc_novo;
 
 import android.content.Intent;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.media.Image;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.speech.RecognitionListener;
+import android.os.Handler;
 import android.speech.RecognizerIntent;
-import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.format.DateUtils;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,16 +15,13 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.example.andersondev.tcc_novo.database.DataOpenHelper;
-
-import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
     private RelativeLayout layoutCoord;
+    public static final int MESSAGE_READ = 3;
 
     /* TTS */
     Speech speech;
@@ -43,18 +30,18 @@ public class MainActivity extends AppCompatActivity {
 
     /* DATABASE */
     private SQLiteDatabase conn;
-    private DataOpenHelper dataOH;
 
     /* Bluetooth */
     Bluetooth bluetooth;
     UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
-
-
+    private boolean hasRow = false;
     /* Controle */
     ImageButton btnControl;
 
     /* Temperature */
     ImageButton btnTemperature;
+    Handler h;
+
     /**
      * When it's being created
      * @param savedInstanceState
@@ -63,9 +50,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
         /* BLUETOOTH */
-        bluetooth = new Bluetooth(getApplicationContext(),uuid,this);
+
+        bluetooth = new Bluetooth(getApplicationContext(),uuid,this,0);
         bluetooth.create();
+
         speech =  new Speech(this, getApplicationContext(),bluetooth);
 
         setContentView(R.layout.controle);
@@ -79,12 +69,17 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS,1);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE,new Locale("pt","BR"));
+                if(speech.isAvailableRecognizer()) {
+                    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                    intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, new Locale("pt", "BR"));
 
-                speech.mySR.startListening(intent);
+                    speech.mySR.startListening(intent);
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "Desculpe, mas seu dispositivo não suporta reconhecimento de voz", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -92,16 +87,10 @@ public class MainActivity extends AppCompatActivity {
         speech.initializeTextToSpeech();
         speech.initializeSpeechRecognizer();
 
-
-
-
-        /* CREATE CONNECTION DATABASE */
-        createConnection();
-
-
         btnControl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                bluetooth.closeConn();
                 Intent it = new Intent(MainActivity.this, Control.class);
                 startActivity(it);
             }
@@ -110,34 +99,19 @@ public class MainActivity extends AppCompatActivity {
         btnTemperature.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                bluetooth.closeConn();
                 Intent it = new Intent(MainActivity.this, Temperature.class);
                 startActivity(it);
             }
         });
-
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         bluetooth.result(requestCode,resultCode,data);
     }
-
-    private void createConnection(){
-        try{
-            dataOH = new DataOpenHelper(this);
-
-            conn = dataOH.getWritableDatabase();
-            Snackbar.make(findViewById(android.R.id.content), "Conexão criada com sucesso!",Snackbar.LENGTH_SHORT).setAction("OK",null).show();
-        }
-        catch (SQLException e){
-            AlertDialog.Builder dlg = new AlertDialog.Builder(getApplicationContext());
-            dlg.setTitle("Erro");
-            dlg.setMessage(e.getMessage());
-            dlg.setNeutralButton("OK", null);
-            dlg.show();
-        }
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -163,6 +137,6 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onPause(){
         super.onPause();
-        speech.myTTS.shutdown();
+        //speech.myTTS.shutdown();
     }
 }
