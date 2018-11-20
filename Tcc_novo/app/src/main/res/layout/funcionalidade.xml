@@ -9,23 +9,25 @@
     android:weightSum="1">
 
     <ImageButton
-        android:layout_width="150dp"
-        app:srcCompat="@drawable/idea"
         android:id="@+id/btnLed"
+        android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_alignTop="@+id/btnFan"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignTop="@+id/btnFan"
+        android:background="#518ff5"
+        app:srcCompat="@drawable/idea" />
 
     <ImageButton
+        android:id="@+id/btnFan"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        app:srcCompat="@drawable/fan"
-        android:id="@+id/btnFan"
-        android:layout_marginTop="165dp"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="165dp"
+        android:background="#518ff5"
+        app:srcCompat="@drawable/fan" />
 
 
 </RelativeLayout>

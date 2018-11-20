@@ -40,6 +40,12 @@
             android:label="Controle"
             android:theme="@style/AppTheme"></activity>
         <activity android:name=".Temperature"></activity>
+        <activity android:name=".WaterBox">
+
+        </activity>
+        <activity android:name=".DatePicker">
+
+        </activity>
     </application>
 
 </manifest>

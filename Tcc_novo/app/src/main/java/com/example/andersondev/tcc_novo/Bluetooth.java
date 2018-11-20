@@ -66,7 +66,6 @@ public class Bluetooth extends Activity  {
             hasBlueetooth = true;
         }
         else{
-            Log.d("BANCO GET 1", "FUNFA CARAI");
             cursor = db.getSetting();
             MAC = cursor.getString(1);
             createCommunication(MAC);
@@ -129,8 +128,11 @@ public class Bluetooth extends Activity  {
             if(type == 0){
                 connectedThread.write("cmds");
             }
-            else{
+            if(type == 1){
                 connectedThread.write("temperature");
+            }
+            if(type == 2){
+                connectedThread.write("caixa");
             }
         }catch(IOException error){
             isConection = false;

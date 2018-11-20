@@ -109,8 +109,8 @@ public class Speech {
                 else{
                     Locale locale = new Locale("pt","BR");
                     myTTS.setLanguage(locale);
-                    speak("Olá anderson");
-                    speak("Eu estou pronta para falar");
+                    speak("Olá");
+                    speak("Como posso lhe ajudar?");
                 }
             }
         });
@@ -167,7 +167,17 @@ public class Speech {
                 speak("ligando luz");
                 bluetooth.connectedThread.write("led1");
             }
-
+            else if(cmd.indexOf("desligar tudo") != -1){
+                speak("desligando tudo");
+                bluetooth.connectedThread.write("alloff");
+            }
+            else if(cmd.indexOf("ligar tudo") != -1){
+                speak("ligando tudo");
+                bluetooth.connectedThread.write("allon");
+            }
+            else{
+                speak("Desculpe mas não entendi, os comandos podem ser os seguintes, ligar ou desligar tudo ou luz ou ventilador e abrir navegador");
+            }
 
         }
     }

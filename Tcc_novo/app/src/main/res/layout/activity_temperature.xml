@@ -30,7 +30,7 @@
         android:layout_marginRight="5dp"
         android:fontFamily="sans-serif-condensed"
         android:gravity="center"
-        android:text="22 ºC"
+        android:text="- ºC"
         android:textColor="@android:color/background_light"
         android:textSize="70sp"
         android:textStyle="bold" />
