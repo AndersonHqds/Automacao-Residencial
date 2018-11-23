@@ -55,7 +55,7 @@ public class Bluetooth extends Activity  {
         db = new BancoDados(context);
         //db.getWritableDatabase();
         //db.addSetting(new Settings("FC:A8:9A:00:20:BA", 30.00));
-        hasRow = db.hasRow();
+        hasRow = db.hasRowSetting();
 
         //db.addSetting(new Settings("FC:A8:9A:00:20:BA", 30.00));
         if(bluetoothAdapter == null){
@@ -96,7 +96,7 @@ public class Bluetooth extends Activity  {
             case CONNECTION_PERMISSION:
                 if(resultCode == activity.RESULT_OK){
                     MAC = data.getExtras().getString(ShowDevices.MAC_ADDRESS);
-                    db.addSetting(new Settings(MAC, 30.00));
+                    db.addSetting(new Settings(MAC, 30.00, true));
                     createCommunication(MAC);
 
                 }else{
@@ -141,6 +141,7 @@ public class Bluetooth extends Activity  {
     }
 
     public void connect(){
+
         if(hasBlueetooth){
 
             if(isConection){

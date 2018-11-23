@@ -5,18 +5,20 @@ public class Settings {
     int id;
     String bluetooth_mac;
     Double temperature;
-
+    Boolean isInHome;
     public Settings(){}
 
-    public Settings(int id, String bluetooth_mac, Double temperature){
+    public Settings(int id, String bluetooth_mac, Double temperature, Boolean isInHome){
         this.id = id;
         this.bluetooth_mac = bluetooth_mac;
-        this.temperature = temperature;
+        this.temperature   = temperature;
+        this.isInHome      = isInHome;
     }
 
-    public Settings(String bluetooth_mac, Double temperature){
-        this.bluetooth_mac = bluetooth_mac;
-        this.temperature = temperature;
+    public Settings(String bluetooth_mac, Double temperature, Boolean isInHome){
+        this.bluetooth_mac  = bluetooth_mac;
+        this.temperature    = temperature;
+        this.isInHome       = isInHome;
     }
 
     public int getId() {
@@ -41,5 +43,13 @@ public class Settings {
 
     public void setTemperature(Double temperature) {
         this.temperature = temperature;
+    }
+
+    public Boolean getInHome() {
+        return isInHome;
+    }
+
+    public void setInHome(Boolean inHome) {
+        isInHome = inHome;
     }
 }

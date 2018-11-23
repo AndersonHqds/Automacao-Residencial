@@ -8,20 +8,31 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.Calendar;
+import java.util.Date;
+
 
 public class BancoDados extends SQLiteOpenHelper {
 
+    //TABLE SETTINGS
     private static final int DB_VERSION = 1;
-    private static final String DB_SETTINGS = "db_setting";
-
+    private static final String DB_SMARTHOUSE = "db_smarthouse";
     private static final String TB_SETTINGS = "tb_settings";
-
     private static final String COL_ID = "id";
     private static final String COL_BLUETOOTH_MAC = "bluetooth_mac";
     private static final String COL_TEMPERATURE = "temperature";
+    private static final String COL_ISINHOME = "isinhome";
+
+    //TABLE CONSUMO
+    private static final String TB_CONSUMO = "tb_consumo";
+    private static final String COL_CONSUMO_ID = "id";
+    private static final String COL_TIPO = "tipo";
+    private static final String COL_DATA = "data";
+    private static final String COL_GASTO = "gastototal";
+    private static final String COL_LITROS = "litros";
     private Context context;
     public BancoDados(Context context) {
-        super(context, DB_SETTINGS, null, DB_VERSION);
+        super(context, DB_SMARTHOUSE, null, DB_VERSION);
         this.context = context;
     }
 
@@ -29,7 +40,10 @@ public class BancoDados extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String COL_QUERY = "CREATE TABLE " + TB_SETTINGS + " ("
                 +  COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_BLUETOOTH_MAC + " TEXT," +
-                COL_TEMPERATURE + " DECIMAL(10,2));";
+                COL_TEMPERATURE + " DECIMAL(10,2), " + COL_ISINHOME + " BOOLEAN ); " +
+                "CREATE TABLE " + TB_CONSUMO + " (" + COL_CONSUMO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COL_TIPO +" TINYINT, " + COL_DATA + " DATE, " + COL_GASTO + " DECIMAL(10,2), " +
+                COL_LITROS + " VARCHAR(13))";
         Log.d("BANCO", COL_QUERY);
         db.execSQL(COL_QUERY);
     }
@@ -72,7 +86,44 @@ public class BancoDados extends SQLiteOpenHelper {
         return cursor;
     }
 
-    boolean hasRow(){
+    void addConsumo(Consumo cons){
+        long resultado;
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(COL_TIPO, cons.tipo);
+        values.put(COL_DATA, cons.data);
+        values.put(COL_GASTO, cons.gastoTotal);
+        values.put(COL_LITROS, cons.litros);
+
+        resultado = db.insert(TB_CONSUMO, null, values);
+
+        db.close();
+        if(resultado == -1)
+            Toast.makeText(context, "Erro ao inserir", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(context, "Inserido", Toast.LENGTH_SHORT).show();
+    }
+
+    Cursor getConsumo(){
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT * FROM " + TB_CONSUMO;
+
+        Cursor cursor = db.rawQuery(query, null);
+        Log.d("BANCO GET", "WORKOU");
+        if(cursor.moveToFirst()){
+
+            return cursor;
+        }
+
+        return cursor;
+    }
+
+
+    boolean hasRowSetting(){
         SQLiteDatabase db = this.getReadableDatabase();
         boolean aux = false;
 

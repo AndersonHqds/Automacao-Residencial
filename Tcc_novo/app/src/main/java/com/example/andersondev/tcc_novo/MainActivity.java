@@ -3,7 +3,6 @@ package com.example.andersondev.tcc_novo;
 import android.animation.Animator;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
@@ -55,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
 
     ImageButton btnWaterBox;
 
-    /* CHART */
-    ImageButton btnChart;
+    /* SHOWER */
+    ImageButton btnShower;
     /**
      * When it's being created
      * @param savedInstanceState
@@ -78,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         btnControl  = (ImageButton) findViewById(R.id.btnControl);
         btnTemperature = (ImageButton) findViewById(R.id.btnTemperature);
         btnWaterBox = (ImageButton) findViewById(R.id.btnWaterBox);
-        btnChart = (ImageButton)findViewById(R.id.btnChart);
+        btnShower = (ImageButton)findViewById(R.id.btnChart);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         animationView = findViewById(R.id.mic);
@@ -106,11 +105,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        btnChart.setOnClickListener(new View.OnClickListener() {
+        btnShower.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 bluetooth.closeConn();
-                Intent it = new Intent(MainActivity.this, DatePicker.class);
+                Intent it = new Intent(MainActivity.this, Shower.class);
                 startActivity(it);
             }
         });

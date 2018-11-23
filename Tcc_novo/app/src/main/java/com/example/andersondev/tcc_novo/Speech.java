@@ -26,10 +26,18 @@ public class Speech {
     private boolean isAvailableRecognizer;
     /* Bluetooth */
     Bluetooth bluetooth;
+    private boolean main = true;
+    public Speech(Activity activity, Context context){
+        this.activity = activity;
+        this.context = context;
+        main = false;
+    }
+
     public Speech(Activity activity, Context context, Bluetooth bt){
         this.activity = activity;
         this.context = context;
         bluetooth = bt;
+
     }
 
     public void initializeSpeechRecognizer() {
@@ -109,8 +117,10 @@ public class Speech {
                 else{
                     Locale locale = new Locale("pt","BR");
                     myTTS.setLanguage(locale);
-                    speak("Olá");
-                    speak("Como posso lhe ajudar?");
+                    if(main) {
+                        speak("Olá");
+                        speak("Como posso lhe ajudar?");
+                    }
                 }
             }
         });
