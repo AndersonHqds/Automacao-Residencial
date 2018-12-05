@@ -82,5 +82,16 @@
         app:lottie_autoPlay="false"
         app:lottie_fileName="mic_updated.json"
         app:lottie_loop="false" />
+
+    <Switch
+        android:id="@+id/outMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="28dp"
+        android:text="Modo saída  "
+        android:textColor="#FFF"
+        android:textSize="20sp" />
 </RelativeLayout>
 

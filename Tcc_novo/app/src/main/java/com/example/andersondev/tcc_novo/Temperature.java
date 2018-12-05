@@ -1,10 +1,13 @@
 package com.example.andersondev.tcc_novo;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -31,6 +34,11 @@ public class Temperature extends AppCompatActivity {
     public static final int MESSAGE_READ = 3;
     TextView temperatura;
     String valor;
+    Button btnSave;
+    EditText defaultTemp;
+    BancoDados db;
+    Boolean hasRow = false;
+    Cursor cursor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,8 +46,12 @@ public class Temperature extends AppCompatActivity {
         animationView = findViewById(R.id.lav_sun_moon);
         temperatura = findViewById(R.id.temperatura);
         animationView.setMinAndMaxFrame(FRAME_FIRST,FRAME_LAST);
+        btnSave = findViewById(R.id.saveTmp);
+        defaultTemp = findViewById(R.id.dftTmp);
+        btnSave.setEnabled(false);
         updateByHour(getTime());
-
+        db = new BancoDados(getApplicationContext());
+        hasRow = db.hasRowSetting();
         final Handler mHandler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
@@ -67,6 +79,43 @@ public class Temperature extends AppCompatActivity {
         };
         bluetooth = new Bluetooth(getApplicationContext(),uuid,this,mHandler, 1);
         bluetooth.create();
+
+        defaultTemp.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                btnSave.setEnabled(true);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(defaultTemp.getText().toString().matches("[0-9]+(\\.[0-9]+)?")) {
+                    if (hasRow) {
+                        cursor = db.getSetting();
+                        Settings set = new Settings(Integer.parseInt(cursor.getString(0)), cursor.getString(1), Double.parseDouble(cursor.getString(2)), Boolean.parseBoolean(cursor.getString(3)));
+                        db.updateSetting(set);
+                    } else {
+                        cursor = db.getSetting();
+                        Settings set = new Settings(cursor.getString(1), Double.parseDouble(defaultTemp.getText().toString()), Boolean.parseBoolean(cursor.getString(3)));
+                        db.addSetting(set);
+                    }
+                }
+                else{
+                    Toast.makeText(getApplicationContext(),"Digite um número", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     private int getTime(){

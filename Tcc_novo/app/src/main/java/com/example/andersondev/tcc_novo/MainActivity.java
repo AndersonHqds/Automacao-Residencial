@@ -2,6 +2,7 @@ package com.example.andersondev.tcc_novo;
 
 import android.animation.Animator;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,8 +13,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -29,13 +32,10 @@ public class MainActivity extends AppCompatActivity {
     /* TTS */
 
     Speech speech;
-    private TextToSpeech myTTS;
     private LottieAnimationView animationView;
-
-    /* DATABASE */
-
-    private SQLiteDatabase conn;
-
+    BancoDados db;
+    Switch outMode;
+    Cursor cursor;
     /* Bluetooth */
 
     Bluetooth bluetooth;
@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
     /* Temperature */
 
     ImageButton btnTemperature;
-    Handler h;
 
     /* WaterBox */
 
@@ -78,9 +77,14 @@ public class MainActivity extends AppCompatActivity {
         btnTemperature = (ImageButton) findViewById(R.id.btnTemperature);
         btnWaterBox = (ImageButton) findViewById(R.id.btnWaterBox);
         btnShower = (ImageButton)findViewById(R.id.btnChart);
-
+        outMode = (Switch)findViewById(R.id.outMode);
+        db = new BancoDados(getApplicationContext());
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         animationView = findViewById(R.id.mic);
+        if(db.hasRowSetting()) {
+            cursor = db.getSetting();
+            outMode.setChecked(Boolean.parseBoolean(cursor.getString(3)));
+        }
 
         animationView.addAnimatorListener(new Animator.AnimatorListener() {
             @Override
@@ -163,6 +167,22 @@ public class MainActivity extends AppCompatActivity {
                 bluetooth.closeConn();
                 Intent it = new Intent(MainActivity.this, WaterBox.class);
                 startActivity(it);
+            }
+        });
+
+        outMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    cursor = db.getSetting();
+                    Settings set = new Settings(Integer.parseInt(cursor.getString(0)), cursor.getString(1), Double.parseDouble(cursor.getString(2)), true);
+                    db.updateSetting(set);
+                }
+                else{
+                    cursor = db.getSetting();
+                    Settings set = new Settings(Integer.parseInt(cursor.getString(0)), cursor.getString(1), Double.parseDouble(cursor.getString(2)), false);
+                    db.updateSetting(set);
+                }
             }
         });
     }

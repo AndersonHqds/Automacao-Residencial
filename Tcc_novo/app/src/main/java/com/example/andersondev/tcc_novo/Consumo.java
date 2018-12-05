@@ -8,19 +8,17 @@ public class Consumo{
 
     public Consumo(){}
 
-    public Consumo(int id, int tipo, String data, Double gastoTotal, String litros){
+    public Consumo(int id, int tipo, String data, Double gastoTotal){
         this.id = id;
         this.tipo = tipo;
         this.data = data;
         this.gastoTotal = gastoTotal;
-        this.litros     = litros;
     }
 
-    public Consumo(int tipo, String data, Double gastoTotal, String litros){
+    public Consumo(int tipo, String data, Double gastoTotal){
         this.tipo = tipo;
         this.data = data;
         this.gastoTotal = gastoTotal;
-        this.litros = litros;
     }
 
     public int getId() {
@@ -55,11 +53,4 @@ public class Consumo{
         this.gastoTotal = gastoTotal;
     }
 
-    public String getLitros() {
-        return litros;
-    }
-
-    public void setLitros(String litros) {
-        this.litros = litros;
-    }
 }

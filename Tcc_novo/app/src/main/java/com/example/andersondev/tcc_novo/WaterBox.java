@@ -24,7 +24,7 @@ public class WaterBox extends AppCompatActivity {
     UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
     public static final int MESSAGE_READ = 3;
     TextView txtNivel, txtStatus;
-
+    int lastNumber = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,9 +48,13 @@ public class WaterBox extends AppCompatActivity {
 
                         if(receiveds.charAt(0) == '{'){
                             String finalData = receiveds.substring(1, infoSize);
-                            txtNivel.setText((int)(100 - (Double.parseDouble(finalData.toString().replaceAll("\\D+", "")) / 20) * 100) + "%");
+                            int quantidade = (int)(100 - (Double.parseDouble(finalData.toString().replaceAll("\\D+", "")) / 13) * 100);
+                            if((lastNumber + 5 >= quantidade && quantidade >= lastNumber - 5) || lastNumber == 0 ){
+                                lastNumber = quantidade;
+                                txtNivel.setText( lastNumber + "%");
                             //txtNivel.setText("OK");
-                            Log.d("CHEGANDO", finalData);
+                                Log.d("CHEGANDO", finalData);
+                            }
                         }
                         Log.d("CHEGANDO  2", receiveds);
                         //btData.delete(0, btData.length());

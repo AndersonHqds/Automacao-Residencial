@@ -28,8 +28,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="53dp"
-        android:layout_marginStart="97dp"
+        android:layout_marginBottom="55dp"
+        android:layout_marginStart="36dp"
         android:background="#30afcc"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
@@ -40,9 +40,8 @@
         android:id="@+id/btnStop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/btnStart"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="84dp"
+        android:layout_alignTop="@+id/btnStart"
+        android:layout_centerHorizontal="true"
         android:background="#ff0000"
         android:enabled="false"
         android:text="Pausar" />
@@ -61,7 +60,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="-97dp"
+        android:layout_marginTop="14dp"
+        android:layout_toStartOf="@+id/btnStart"
         android:text="Valor"
         android:textColor="#FFF"
         android:textSize="30sp" />
@@ -70,9 +71,8 @@
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="75dp"
+        android:layout_alignTop="@+id/textView5"
+        android:layout_toEndOf="@+id/isShower"
         android:text="Litros"
         android:textColor="#FFF"
         android:textSize="30sp" />
@@ -81,8 +81,8 @@
         android:id="@+id/txtValor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/lblEnergia"
         android:layout_below="@+id/textView5"
-        android:layout_centerHorizontal="true"
         android:text=""
         android:textColor="#FFF"
         android:textSize="20sp" />
@@ -91,14 +91,15 @@
         android:id="@+id/txtLitros"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView6"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/textView5"
+        android:layout_marginEnd="46dp"
         android:text=""
         android:textColor="#FFF"
         android:textSize="20sp" />
 
     <Switch
-        android:id="@+id/switch1"
+        android:id="@+id/isShower"
         android:layout_width="132dp"
         android:layout_height="65dp"
         android:layout_above="@+id/btnStart"
@@ -106,6 +107,49 @@
         android:text="Chuveiro"
         android:textColor="#FFF"
         android:textSize="20sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textView5"
+        android:layout_centerHorizontal="true"
+        android:text="Água"
+        android:textColor="#FFF"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/lblEnergia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/txtValorEnergia"
+        android:layout_alignStart="@+id/textView5"
+        android:layout_marginBottom="-148dp"
+        android:enabled="false"
+        android:text="Energia:"
+        android:textColor="#FFF"
+        android:textSize="30sp"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/txtValorEnergia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/btnStop"
+        android:layout_marginTop="110dp"
+        android:enabled="false"
+        android:textColor="#FFF"
+        android:textSize="30sp"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/btnChart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView6"
+        android:layout_alignTop="@+id/btnStart"
+        android:background="@android:color/holo_green_dark"
+        android:text="Gráfico" />
 
 
 </RelativeLayout>

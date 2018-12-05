@@ -24,7 +24,7 @@ public class Bluetooth extends Activity  {
     private boolean isConection = false;
     private boolean hasBlueetooth = false;
     ConnectionThread connectedThread;
-    UUID uuid = null;
+    UUID uuid;
     private static String MAC = null;
     Handler mHandler;
     Boolean isRead = false;

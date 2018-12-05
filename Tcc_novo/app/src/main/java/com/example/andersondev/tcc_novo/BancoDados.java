@@ -3,6 +3,7 @@ package com.example.andersondev.tcc_novo;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -40,12 +41,12 @@ public class BancoDados extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String COL_QUERY = "CREATE TABLE " + TB_SETTINGS + " ("
                 +  COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_BLUETOOTH_MAC + " TEXT," +
-                COL_TEMPERATURE + " DECIMAL(10,2), " + COL_ISINHOME + " BOOLEAN ); " +
-                "CREATE TABLE " + TB_CONSUMO + " (" + COL_CONSUMO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COL_TIPO +" TINYINT, " + COL_DATA + " DATE, " + COL_GASTO + " DECIMAL(10,2), " +
-                COL_LITROS + " VARCHAR(13))";
+                COL_TEMPERATURE + " DECIMAL(10,2), " + COL_ISINHOME + " BOOLEAN ); ";
+        String COL_QUERY2 = "CREATE TABLE " + TB_CONSUMO + " (" + COL_CONSUMO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COL_TIPO +" TINYINT, " + COL_DATA + " DATE, " + COL_GASTO + " DECIMAL(10,2))";
         Log.d("BANCO", COL_QUERY);
         db.execSQL(COL_QUERY);
+        db.execSQL(COL_QUERY2);
     }
 
     @Override
@@ -58,10 +59,28 @@ public class BancoDados extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
 
-        values.put(COL_BLUETOOTH_MAC, "FC:A8:9A:00:20:BA");
+        values.put(COL_BLUETOOTH_MAC, set.getBluetooth_mac());
         values.put(COL_TEMPERATURE, 33.3);
 
         resultado = db.insert(TB_SETTINGS, null, values);
+
+        db.close();
+        if(resultado == -1)
+            Toast.makeText(context, "Erro ao inserir", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(context, "Inserido", Toast.LENGTH_SHORT).show();
+    }
+
+    void updateSetting(Settings set){
+        long resultado;
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COL_ID, set.getId());
+        values.put(COL_BLUETOOTH_MAC, set.getBluetooth_mac());
+        values.put(COL_TEMPERATURE, set.getTemperature());
+        values.put(COL_ISINHOME, set.isInHome);
+        resultado = db.update(TB_SETTINGS, values, "id=" + set.getId(), null);
 
         db.close();
         if(resultado == -1)
@@ -95,7 +114,6 @@ public class BancoDados extends SQLiteOpenHelper {
         values.put(COL_TIPO, cons.tipo);
         values.put(COL_DATA, cons.data);
         values.put(COL_GASTO, cons.gastoTotal);
-        values.put(COL_LITROS, cons.litros);
 
         resultado = db.insert(TB_CONSUMO, null, values);
 
@@ -106,18 +124,14 @@ public class BancoDados extends SQLiteOpenHelper {
             Toast.makeText(context, "Inserido", Toast.LENGTH_SHORT).show();
     }
 
-    Cursor getConsumo(){
+    Cursor getConsumo(int month, int tipo){
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String query = "SELECT * FROM " + TB_CONSUMO;
+        String query = "SELECT DISTINCT SUM(gastototal) as total, strftime('%d', data) as dia FROM " + TB_CONSUMO + " WHERE strftime('%m', data) = '" + month + "' AND tipo = " + tipo + " GROUP BY dia";
 
         Cursor cursor = db.rawQuery(query, null);
-        Log.d("BANCO GET", "WORKOU");
-        if(cursor.moveToFirst()){
-
-            return cursor;
-        }
+        Log.v("Cursor OBJ", DatabaseUtils.dumpCursorToString(cursor));
 
         return cursor;
     }

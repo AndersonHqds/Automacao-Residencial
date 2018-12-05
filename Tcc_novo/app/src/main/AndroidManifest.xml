@@ -25,7 +25,11 @@
             android:name=".splashscreen"
             android:label=""
             android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ShowDevices"
@@ -40,11 +44,10 @@
 
         </activity>
         <activity android:name=".Shower">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        </activity>
+        <activity android:name=".Chart">
+
         </activity>
     </application>
 

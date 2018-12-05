@@ -16,8 +16,7 @@
         android:scaleType="centerCrop"
         app:lottie_autoPlay="false"
         app:lottie_fileName="sun_moon.json"
-        app:lottie_loop="false"
-        android:layout_alignParentLeft="true" />
+        app:lottie_loop="false" />
 
     <TextView
         android:id="@+id/temperatura"
@@ -34,5 +33,28 @@
         android:textColor="@android:color/background_light"
         android:textSize="70sp"
         android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/dftTmp"
+        android:layout_width="129dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/saveTmp"
+        android:layout_marginStart="49dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Temperatura" />
+
+    <Button
+        android:id="@+id/saveTmp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="64dp"
+        android:layout_marginTop="33dp"
+        android:background="#30afcc"
+        android:text="Salvar"
+        android:textColor="#FFF" />
 
 </RelativeLayout>
