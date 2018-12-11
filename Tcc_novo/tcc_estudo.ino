@@ -1,7 +1,7 @@
 #include <LiquidCrystal.h>
 #include <SoftwareSerial.h>
 #include <dht.h>
-#include <NewPing.h>
+#include <Ultrasonic.h>
 
 #define TRIGGER_PIN  3  // Arduino pin tied to trigger pin on the ultrasonic sensor.
 #define ECHO_PIN     4  // Arduino pin tied to echo pin on the ultrasonic sensor.
@@ -17,7 +17,8 @@
 //Object Instance
 dht dhtHandler;
 SoftwareSerial bluetooth(10, 11);
-NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
+
+Ultrasonic ultrasonic(TRIGGER_PIN, ECHO_PIN);
 const int pinLed = 12;
 const int pinPir = 8;
 const int dhtPin = 9;
@@ -50,6 +51,11 @@ void loop() {
   //char numero;
   //numero = Serial.read();
   command = ""; 
+  float cmMsec, inMsec;
+  long microsec = ultrasonic.timing();
+
+  cmMsec = ultrasonic.convert(microsec, Ultrasonic::CM);
+  inMsec = ultrasonic.convert(microsec, Ultrasonic::IN);
   dhtHandler.read11(dhtPin);
 
   temperatura = dhtHandler.temperature;
@@ -73,7 +79,7 @@ void loop() {
       type = 2;
     }
 
-    if()
+
  
     if(type == 0){
       if (command.indexOf("led1") >= 0) {
@@ -83,11 +89,11 @@ void loop() {
         digitalWrite(fanPin, !digitalRead(fanPin));
       }
        if(command.indexOf("alloff") >= 0){
-        digitalWrite(pinLed, LOW);
+        digitalWrite(pinLed, HIGH);
         digitalWrite(fanPin, LOW);
        }
        if(command.indexOf("allon") >= 0){
-          digitalWrite(pinLed, HIGH);
+          digitalWrite(pinLed, LOW);
           digitalWrite(fanPin, HIGH);
        }
     }
@@ -99,9 +105,11 @@ void loop() {
     }
     if(type == 2){
       bluetooth.println("{");
-      bluetooth.print(sonar.ping_cm());
+      bluetooth.print((int)cmMsec);
       bluetooth.println(" %");
       bluetooth.println("}");   
-      Serial.println(sonar.ping_cm());
+     delay(1000);
      }
+ Serial.println((int)cmMsec);
+     
 }

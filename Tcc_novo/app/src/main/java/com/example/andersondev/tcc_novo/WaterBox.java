@@ -48,15 +48,22 @@ public class WaterBox extends AppCompatActivity {
 
                         if(receiveds.charAt(0) == '{'){
                             String finalData = receiveds.substring(1, infoSize);
-                            int quantidade = (int)(100 - (Double.parseDouble(finalData.toString().replaceAll("\\D+", "")) / 13) * 100);
-                            if((lastNumber + 5 >= quantidade && quantidade >= lastNumber - 5) || lastNumber == 0 ){
-                                lastNumber = quantidade;
-                                txtNivel.setText( lastNumber + "%");
-                            //txtNivel.setText("OK");
-                                Log.d("CHEGANDO", finalData);
+                            Double number = Double.parseDouble(finalData.toString().replaceAll("\\D+", ""));
+
+                            if(number > 14 && number < 1000){
+                                number = 14.0;
                             }
+
+                            if(number > 1000){
+                                number = 0.0;
+                            }
+                            int quantidade = (int)(100 - ( number / 14) * 100);
+                            txtNivel.setText( quantidade + "%");
+
+                            Log.d("LastNumber", String.valueOf(lastNumber));
+                            Log.d("quantidade", String.valueOf(quantidade));
                         }
-                        Log.d("CHEGANDO  2", receiveds);
+                        //Log.d("CHEGANDO  2", receiveds);
                         //btData.delete(0, btData.length());
                     }
 
