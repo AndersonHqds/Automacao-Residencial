@@ -20,9 +20,9 @@ Import the program into android studio, [generate a signed apk] (https://develop
 
 ## App Images
 
-##Splash Screen
+## Splash Screen
 ![Splash Screen](home-automation/images/images-027.png)
-##Home
+## Home
 ![Home](home-automation/images/images-028.png)
-##Water Level
+## Water Level
 ![Water level](home-automation/images/images-029.png)
