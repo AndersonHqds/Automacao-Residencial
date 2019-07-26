@@ -11,7 +11,7 @@ Home automation software, developed in java (Android studio) also containing the
     * 2 relay modules (if using real fan and lamp instead of led and motor fan)
     * Ultrasonic (sonar) sensor for water level checking (other)
     * Resistors
-    * Temperature Sensor - ** DHT11 **
+    * Temperature Sensor - **DHT11**
 * Bluetooth-enabled mobile phone and voice commands
 
 
@@ -20,6 +20,6 @@ Import the program into android studio, [generate a signed apk] (https://develop
 
 ## App Images
 
-! [Splash Screen] (home-automation/images/images-027.png)
-! [Home] (home-automation/images/images-028.png)
-! [Water level] (home-automation/images/images-029.png)
+![Splash Screen](home-automation/images/images-027.png)
+![Home](home-automation/images/images-028.png)
+![Water level](home-automation/images/images-029.png)
